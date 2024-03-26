@@ -25,10 +25,10 @@ contract Swap {
     AggregatorV3Interface internal linkUsdPriceFeed;
     AggregatorV3Interface internal daiUsdPriceFeed;
 
-    constructor(address _ethUsdPriceFeed, address _linkUsdPriceFeed, address _daiUsdPriceFeed) {
-        ethUsdPriceFeed = AggregatorV3Interface(_ethUsdPriceFeed);
-        linkUsdPriceFeed = AggregatorV3Interface(_linkUsdPriceFeed);
-        daiUsdPriceFeed = AggregatorV3Interface(_daiUsdPriceFeed);
+    constructor() {
+        ethUsdPriceFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
+        linkUsdPriceFeed = AggregatorV3Interface(0xc59E3633BAAC79493d908e63626716e204A45EdF);
+        daiUsdPriceFeed = AggregatorV3Interface(0x14866185B1962B63C3Ea9E03Bc1da838bab34C19);
 
         daiTokenAddr = IERC20(daiAddress);
         linkTokenAddr = IERC20(linkAddress);
