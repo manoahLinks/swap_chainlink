@@ -13,9 +13,9 @@ contract SwapContractTest is Test {
     IERC20 public wethTokenAddr;
     ISwap swap;
 
-    address AddrEth = address(0x477b144FbB1cE15554927587f18a27b241126FBC);    
-    address AddrDai = address(0xe902aC65D282829C7a0c42CAe165D3eE33482b9f);
-    address AddrLink = address(0x6a37809BdFC0aC7b73355E82c1284333159bc5F0);
+    address AddrEth = address(0xfc585e2A20C30e712C6b17819909Ccf2Fc5aa014);    
+    address AddrDai = address(0x906e04c0A81F973A619359652d853999546B6216);
+    address AddrLink = address(0x4281eCF07378Ee595C564a59048801330f3084eE);
 
 
     function setUp() public {
@@ -26,23 +26,6 @@ contract SwapContractTest is Test {
     }
 
 
-    // function testSwapEthDai() public {
-
-    //     switchSigner(AddrDai);
-    //     uint256 balance= dai.balanceOf(AddrDai);
-    //     dai.transfer(address(swap), balance);
-
-    //     switchSigner(AddrLink);
-    //     uint balanceOfLinkBeforeSwap = link.balanceOf(AddrLink);
-    //     link.approve(address(swap), 1);
-
-    //     swap.swapLinkToDai(1);
-
-    //     uint balanceOfLinkAfterSwap = dai.balanceOf(AddrDai);
-
-    //     assertGt(balanceOfLinkAfterSwap, balanceOfLinkBeforeSwap);
-
-    // }
 
      function testSwapEthLink() public {
         switchSigner(AddrLink);
@@ -81,57 +64,75 @@ contract SwapContractTest is Test {
 
     }
 
-    //  function testSwapLinkEth() public {
+     function testSwapForLinkEth() public {
         
-    //     switchSigner(AddrEth);
-    //     uint256 balance= eth.balanceOf(AddrEth);
-    //     eth.transfer(address(swapContract), balance);
+        switchSigner(AddrEth);
+        uint256 balance= wethTokenAddr.balanceOf(AddrEth);
+        wethTokenAddr.transfer(address(swap), balance);
 
-    //     switchSigner(AddrLink);
-    //     uint balanceOfLinkBeforeSwap = eth.balanceOf(AddrLink);
-    //     link.approve(address(swapContract), 1);
+        switchSigner(AddrLink);
+        uint balanceOfLinkBeforeSwap = wethTokenAddr.balanceOf(AddrLink);
+        linkTokenAddr.approve(address(swap), 1);
 
-    //     swapContract.swapLinkEth(1);
+        swap.swapLinkForEth(1);
 
-    //     uint balanceOfLinkAfterSwap = eth.balanceOf(AddrLink);
+        uint balanceOfLinkAfterSwap = wethTokenAddr.balanceOf(AddrLink);
 
-    //     assertGt(balanceOfLinkAfterSwap, balanceOfLinkBeforeSwap);
+        assertEq(balanceOfLinkAfterSwap, balanceOfLinkBeforeSwap);
 
-    // }
+    }
 
-    //  function testSwapDaiLink() public {
-    //     switchSigner(AddrLink);
-    //     uint256 balance= link.balanceOf(AddrLink);
-    //     link.transfer(address(swapContract), balance);
+     function testSwapDaiLink() public {
+        switchSigner(AddrLink);
+        uint256 balance= linkTokenAddr.balanceOf(AddrLink);
+        linkTokenAddr.transfer(address(swap), balance);
 
-    //     switchSigner(AddrDai);
-    //     uint balanceOfLinkBeforeSwap = link.balanceOf(AddrDai);
-    //     dai.approve(address(swapContract), 1);
+        switchSigner(AddrDai);
+        uint balanceOfLinkBeforeSwap = linkTokenAddr.balanceOf(AddrDai);
+        daiTokenAddr.approve(address(swap), 1);
 
-    //     swapContract.swapDaiLink(1);
+        swap.swapDaiToLink(1);
 
-    //     uint balanceOfLinkAfterSwap = link.balanceOf(AddrDai);
+        uint balanceOfLinkAfterSwap = linkTokenAddr.balanceOf(AddrDai);
 
-    //     assertGt(balanceOfLinkAfterSwap, balanceOfLinkBeforeSwap);
+        assertGt(balanceOfLinkAfterSwap, balanceOfLinkBeforeSwap);
 
-    // }
+    }
 
-    //  function testSwapDaiEth() public {
-    //     switchSigner(AddrEth);
-    //     uint256 balance= eth.balanceOf(AddrEth);
-    //     eth.transfer(address(swapContract), balance);
+    function testSwapEthDai() public {
 
-    //     switchSigner(AddrDai);
-    //     uint balanceOfEthBeforeSwap = eth.balanceOf(AddrDai);
-    //     dai.approve(address(swapContract), 1);
+        switchSigner(AddrDai);
+        uint256 balance= daiTokenAddr.balanceOf(AddrDai);
+        daiTokenAddr.transfer(address(swap), balance);
 
-    //     swapContract.swapDaiEth(1);
+        switchSigner(AddrLink);
+        uint balanceOfLinkBeforeSwap = linkTokenAddr.balanceOf(AddrLink);
+        linkTokenAddr.approve(address(swap), 1);
 
-    //     uint balanceOfEthAfterSwap = eth.balanceOf(AddrDai);
+        swap.swapLinkToDai(1);
 
-    //     assertGt(balanceOfEthAfterSwap, balanceOfEthBeforeSwap);
+        uint balanceOfLinkAfterSwap = linkTokenAddr.balanceOf(AddrDai);
 
-    // }
+        assertGt(balanceOfLinkAfterSwap, balanceOfLinkBeforeSwap);
+
+    }
+
+     function testSwapDaiEth() public {
+        switchSigner(AddrEth);
+        uint256 balance= wethTokenAddr.balanceOf(AddrEth);
+        wethTokenAddr.transfer(address(swap), balance);
+
+        switchSigner(AddrDai);
+        uint balanceOfEthBeforeSwap = wethTokenAddr.balanceOf(AddrDai);
+        daiTokenAddr.approve(address(swap), 1);
+
+        swap.swapDaiForEth(1);
+
+        uint balanceOfEthAfterSwap = wethTokenAddr.balanceOf(AddrDai);
+
+        assertGt(balanceOfEthAfterSwap, balanceOfEthBeforeSwap);
+
+    }
 
     function mkaddr(string memory name) public returns (address) {
         address addr = address(
